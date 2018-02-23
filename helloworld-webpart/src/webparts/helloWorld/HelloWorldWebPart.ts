@@ -1,8 +1,8 @@
 import {
-  Environment, 
-  Version, 
-  EnvironmentType 
-} from '@microsoft/sp-core-library';
+  Environment,
+  Version,
+  EnvironmentType
+} from "@microsoft/sp-core-library";
 import {
   BaseClientSideWebPart,
   IPropertyPaneConfiguration,
@@ -10,16 +10,16 @@ import {
   PropertyPaneCheckbox,
   PropertyPaneDropdown,
   PropertyPaneToggle
-} from '@microsoft/sp-webpart-base';
-import { escape } from '@microsoft/sp-lodash-subset';
+} from "@microsoft/sp-webpart-base";
+import { escape } from "@microsoft/sp-lodash-subset";
 
-import styles from './HelloWorldWebPart.module.scss';
-import * as strings from 'HelloWorldWebPartStrings';
-import MockHttpClient from './MockHttpClient';
+import styles from "./HelloWorldWebPart.module.scss";
+import * as strings from "HelloWorldWebPartStrings";
+import MockHttpClient from "./MockHttpClient";
 import {
   SPHttpClient,
   SPHttpClientResponse
-} from '@microsoft/sp-http';
+} from "@microsoft/sp-http";
 
 
 export interface IHelloWorldWebPartProps {
@@ -45,18 +45,19 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
     return MockHttpClient.get().then((data: ISPList[]) => {
       var listData: ISPLists = {value: data};
       return listData;
-    }) as Promise<ISPLists>
+    }) as Promise<ISPLists>;
   }
 
   private _getListData(): Promise<ISPLists> {
-    return this.context.spHttpClient.get(this.context.pageContext.web.absoluteUrl + '/_api/web/lists?$filter=Hidden eq false', SPHttpClient.configurations.v1)
+    // tslint:disable-next-line:max-line-length
+    return this.context.spHttpClient.get(this.context.pageContext.web.absoluteUrl + "/_api/web/lists?$filter=Hidden eq false", SPHttpClient.configurations.v1)
     .then((response: SPHttpClientResponse) => {
       return response.json();
-    })
+    });
   }
 
   private _renderList(items: ISPList[]): void {
-    let html: string = '';
+    let html: string = "";
     items.forEach((item: ISPList) => {
       html += `
     <ul class="${styles.list}">
@@ -65,24 +66,23 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
       </li>
     </ul>`;
     });
- 
-    const listContainer: Element = this.domElement.querySelector('#spListContainer');
+
+    const listContainer: Element = this.domElement.querySelector("#spListContainer");
     listContainer.innerHTML = html;
   }
 
   private _renderListAsync(): void {
-    // Local environment
+    // local environment
     if (Environment.type === EnvironmentType.Local) {
       this._getMockListData().then((response) => {
         this._renderList(response.value);
       });
-    }
-    else if (Environment.type == EnvironmentType.SharePoint ||
-              Environment.type == EnvironmentType.ClassicSharePoint) {
+    } else if (Environment.type === EnvironmentType.SharePoint ||
+              Environment.type === EnvironmentType.ClassicSharePoint) {
                 this._getListData()
                 .then((reponse) => {
                   this._renderList(reponse.value);
-                })
+                });
               }
   }
 
@@ -110,7 +110,7 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
   }
 
   protected get dataVersion(): Version {
-    return Version.parse('1.0');
+    return Version.parse("1.0");
   }
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
@@ -124,28 +124,28 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart<IHelloWorld
             {
               groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
-                label: 'Description'
+                PropertyPaneTextField("description", {
+                label: "Description"
               }),
-              PropertyPaneTextField('test', {
-                label: 'Multi-line Text Field',
-                multiline: true 
+              PropertyPaneTextField("test", {
+                label: "Multi-line Text Field",
+                multiline: true
               }),
-              PropertyPaneCheckbox('test1', {
-                text: 'Checkbox'
+              PropertyPaneCheckbox("test1", {
+                text: "Checkbox"
               }),
-              PropertyPaneDropdown('test2', {
-                label: 'Dropdown',
+              PropertyPaneDropdown("test2", {
+                label: "Dropdown",
                 options: [
-                  { key: '1', text: 'One' },
-                  { key: '2', text: 'Two' },
-                  { key: '3', text: 'Three' },
-                  { key: '4', text: 'Four' }
+                  { key: "1", text: "One" },
+                  { key: "2", text: "Two" },
+                  { key: "3", text: "Three" },
+                  { key: "4", text: "Four" }
                 ]}),
-              PropertyPaneToggle('test3', {
-                label: 'Toggle',
-                onText: 'On',
-                offText: 'Off'
+              PropertyPaneToggle("test3", {
+                label: "Toggle",
+                onText: "On",
+                offText: "Off"
                 })
               ]
             }
